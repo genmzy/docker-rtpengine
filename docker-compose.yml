@@ -1,0 +1,38 @@
+version: '3'
+services:
+  rtpengine:
+    volumes:
+      - ./rtpengine_run:/rtpengine_run
+      - /usr/local/rtpengine:/usr/local/rtpengine
+      - /data/fs_record:/usr/local/fs_record
+      - /lib64/xtables:/lib64/xtables
+      - /lib/modules:/lib/modules
+      - /usr/src/kernels:/usr/src/kernels
+    privileged: true
+    ulimits:
+      nofile:
+        soft: 1000000
+        hard: 1000000
+    image: 172.20.0.201/rtpengine/cht-docker-rtpengine-rtpengine:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.rtpengine
+    network_mode: host
+    #environment:
+      #TABLE: 0
+      #LOCAL_IP: ""
+  recording:
+    volumes:
+      - ./rtpengine_run:/rtpengine_run
+      - /usr/local/rtpengine:/usr/local/rtpengine
+      - /data/fs_record:/usr/local/fs_record
+    privileged: true
+    ulimits:
+      nofile:
+        soft: 1000000
+        hard: 1000000
+    image: 172.20.0.201/rtpengine/cht-docker-rtpengine-recording:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.recording
+    network_mode: host

@@ -1,0 +1,17 @@
+FROM centos:7
+
+ADD rtpengine/ /rtpengine
+WORKDIR /rtpengine
+ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+
+RUN yum -y install epel-release && \
+    yum -y update && \
+    yum -y localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm && \
+    yum -y update && \
+    yum -y install glib2 glib2-devel gcc zlib zlib-devel openssl openssl-devel pcre pcre-devel libcurl libcurl-devel xmlrpc-c xmlrpc-c-devel hiredis-devel iptables-devel ffmpeg-libs ffmpeg-devel json-glib json-glib-devel libpcap libpcap-devel opus opus-devel spandsp-devel spandsp libevent libevent-devel mariadb-devel libwebsockets-devel gperf make perl-IPC-Cmd && \
+    yum clean all && \
+    cd /rtpengine/daemon && \
+    make && \
+    cp -u rtpengine /usr/local/bin
+
+CMD /rtpengine_run/rtpengine_run.sh

@@ -1,0 +1,17 @@
+FROM centos:7
+
+ADD rtpengine/ /rtpengine
+WORKDIR /rtpengine
+ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+
+RUN yum -y install epel-release && \
+    yum -y update && \
+    yum -y localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm && \
+    yum -y update && \
+    yum -y install glib2 glib2-devel gcc zlib zlib-devel openssl openssl-devel perl pcre pcre-devel ffmpeg-libs ffmpeg-devel json-glib json-glib-devel mariadb-devel gperf make && \
+    yum clean all && \
+    cd /rtpengine/recording-daemon && \
+    make && \
+    cp -u rtpengine-recording /usr/local/bin
+
+CMD /rtpengine_run/recording_run.sh
